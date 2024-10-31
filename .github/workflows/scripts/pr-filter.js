@@ -15,11 +15,7 @@ module.exports = async ({ github, context, core }) => {
   const markdown = body.replace(/<!--[\s\S]*?-->/g, '');
   const action = context.payload.action;
 
-  const isValid =
-    pr.base.repo.full_name === pr.head.repo.full_name ||
-    (markdown !== '' && hasTypes(markdown) && hasDescription(markdown));
-
-  if (!isValid) {
+  if (markdown === '' || !hasTypes(markdown) || !hasDescription(markdown)) {
     await github.rest.pulls.update({
       ...context.repo,
       pull_number: pr.number,
